@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<!--
+  package.xml — yahboomcar_nav
+  =============================
+  Pacote ROS2 de navegação autónoma e SLAM para o ROSMaster (X1/X3/R2).
+  Contém launch files, parâmetros Nav2 e configurações de SLAM.
+
+  Dependências de runtime (não declaradas aqui mas necessárias):
+    - nav2_bringup         (ros-humble-nav2-bringup)
+    - slam_gmapping        (deprecado no ROS2 Humble — preferir slam_toolbox)
+    - cartographer_ros     (ros-humble-cartographer-ros)
+    - rtabmap_ros          (ros-humble-rtabmap-ros)
+    - teb_local_planner    (ros-humble-teb-local-planner)
+    - yahboomcar_bringup   (bringup de hardware — usado via laser_bringup_launch.py)
+
+  Nota: as dependências declaradas (rclpy, std_msgs, geometry_msgs) são insuficientes —
+  falta declarar nav2_bringup, slam_gmapping, cartographer_ros e yahboomcar_bringup.
+-->
+<package format="3">
+  <name>yahboomcar_nav</name>
+  <version>0.0.0</version>
+  <description>Pacote de navegação autónoma e SLAM para ROSMaster X3/R2/X1. Inclui launch files para gmapping, Cartographer, RTAB-Map e Nav2 (DWB/TEB), parâmetros de configuração e mapa de exemplo.</description>
+  <maintainer email="1461190907@qq.com">root</maintainer>
+  <license>TODO: License declaration</license>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+
+  <test_depend>ament_copyright</test_depend>
+  <test_depend>ament_flake8</test_depend>
+  <test_depend>ament_pep257</test_depend>
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

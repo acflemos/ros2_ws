@@ -1,0 +1,85 @@
+# rbd_slam_toolbox_params.yaml
+# ============================
+# Configuração do slam_toolbox para mapeamento em simulação Gazebo.
+# Usado por: rbd_slam_x3_launch.py
+#
+# Baseado em: /opt/ros/humble/share/slam_toolbox/config/mapper_params_online_async.yaml
+#
+# Diferenças em relação ao padrão:
+#   - use_sim_time: true (clock do Gazebo)
+#   - base_frame: base_footprint (frame raiz do X3, igual ao URDF rbd_X3_sim.urdf.xacro)
+#   - scan_topic: /scan (remapping do plugin LiDAR em rbd_X3_sim.urdf.xacro)
+#   - max_laser_range: 12.0 (alcance do LiDAR X3 simulado — LD14/YDLIDAR X4)
+#
+# Fluxo de uso (gerar ~/rbd_mapa_moveis.yaml):
+#   Terminal 1: rbd2_slam_x3        — Gazebo + SLAM + RViz
+#   Terminal 2: rbd2_teclado        — percorrer a casa com teleop
+#   Terminal 2: rbd2_salva_mapa_moveis  — guardar quando o mapa estiver pronto
+#   Depois:     rbd2_simulador_x3   — simulador completo com o mapa
+
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: true
+
+    # Plugin de otimização
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
+    ceres_preconditioner: SCHUR_JACOBI
+    ceres_trust_strategy: LEVENBERG_MARQUARDT
+    ceres_dogleg_type: TRADITIONAL_DOGLEG
+    ceres_loss_function: None
+
+    # Frames — consistentes com rbd_X3_sim.urdf.xacro e rbd_gazebo_launch.py
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_footprint
+    scan_topic: /scan
+    use_map_saver: true
+    mode: mapping
+
+    debug_logging: false
+    throttle_scans: 1
+    transform_publish_period: 0.02
+    map_update_interval: 5.0
+    resolution: 0.05
+    min_laser_range: 0.13
+    max_laser_range: 12.0
+    minimum_time_interval: 0.5
+    transform_timeout: 0.2
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000
+    enable_interactive_mode: true
+
+    use_scan_matching: true
+    use_scan_barycenter: true
+    minimum_travel_distance: 0.5
+    minimum_travel_heading: 0.5
+    scan_buffer_size: 10
+    scan_buffer_maximum_scan_distance: 10.0
+    link_match_minimum_response_fine: 0.1
+    link_scan_maximum_distance: 1.5
+    loop_search_maximum_distance: 3.0
+    do_loop_closing: true
+    loop_match_minimum_chain_size: 10
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_coarse: 0.35
+    loop_match_minimum_response_fine: 0.45
+
+    correlation_search_space_dimension: 0.5
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
+
+    loop_search_space_dimension: 8.0
+    loop_search_space_resolution: 0.05
+    loop_search_space_smear_deviation: 0.03
+
+    distance_variance_penalty: 0.5
+    angle_variance_penalty: 1.0
+    fine_search_angle_offset: 0.00349
+    coarse_search_angle_offset: 0.349
+    coarse_angle_resolution: 0.0349
+    minimum_angle_penalty: 0.9
+    minimum_distance_penalty: 0.5
+    use_response_expansion: true
+    min_pass_through: 2
+    occupancy_threshold: 0.1

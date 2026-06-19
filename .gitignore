@@ -1,0 +1,20 @@
+# Pacote âncora — tem repositório git próprio no GitHub
+robodog2/
+
+# Artefatos de build ROS2
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Zips de backup (armazenados localmente, não no git)
+*.zip
+
+# ROS2 / misc
+*.bag
+*.db3
+.DS_Store
