@@ -1,3 +1,24 @@
+# colorHSV.py — DUPLICADO de Voice_Ctrl_colorHSV.py (nó Color_Identify com voz)
+# ================================================================================
+# ATENÇÃO: este ficheiro contém exactamente o mesmo nó ROS2 Color_Identify que
+#   Voice_Ctrl_colorHSV.py — não é uma cópia de yahboomcar_astra/colorHSV.py (que é
+#   uma biblioteca utilitária com write_HSV/read_HSV/color_follow/simplePID).
+#   O nome "colorHSV.py" neste pacote é enganoso.
+#
+# Comandos de voz suportados (código Speech_Lib → cor rastreada):
+#   72     → "Yellow" — HSV [(18,55,187), (81,253,255)]
+#   73     → "Red"    — HSV [(0,175,149), (180,253,255)]
+#   74     → "Green"  — HSV [(44,138,91), (84,255,255)]
+#   75     → "Blue"   — HSV [(83,217,196), (141,253,255)]
+#   76     → "Stop"   — parar rastreamento
+#
+# Subscreve: (nenhum — lê câmara directamente)
+# Publica:   /Current_point (yahboomcar_msgs/Position), /cmd_vel (Twist)
+#
+# Dependências: yahboomcar_astra.astra_common, Speech_Lib (proprietária Yahboom)
+# Relevância para robodog2: preferir Voice_Ctrl_colorHSV.py que tem o mesmo conteúdo
+#   com nome mais descritivo. Este ficheiro pode ser ignorado.
+
 #ros lib
 import rclpy
 from rclpy.node import Node

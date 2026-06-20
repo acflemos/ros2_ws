@@ -1,3 +1,26 @@
+# Voice_Ctrl_colorTracker.py — Seguimento PID de objecto colorido com câmara de profundidade
+# ===========================================================================================
+# Descrição: nó ROS2 que recebe a posição do objecto detectado (de /Current_point, publicado
+#   por Voice_Ctrl_colorHSV) e usa a imagem de profundidade da câmara Astra para calcular a
+#   distância ao objecto. Aplica dois controladores PID independentes — um para velocidade
+#   linear (manter distância mínima) e outro para velocidade angular (centrar o objecto).
+#   Não tem lógica de voz própria: depende de Voice_Ctrl_colorHSV para selecção de cor.
+#
+# Comandos de voz: nenhum neste nó — a selecção de cor é feita em Voice_Ctrl_colorHSV.
+#
+# Subscreve: /camera/depth/image_raw (sensor_msgs/Image — profundidade Astra),
+#            /JoyState (Bool — suspende controlo quando joystick activo),
+#            /Current_point (yahboomcar_msgs/Position — posição do objecto detectado)
+# Publica:   /cmd_vel (Twist)
+#
+# Dependências: yahboomcar_astra.astra_common (simplePID, color_follow), cv_bridge,
+#   yahboomcar_msgs
+# Parâmetros ROS2: linear_Kp/Ki/Kd, angular_Kp/Ki/Kd, scale, minDistance
+# Limitações: a lógica de detecção de "objecto parado" (linhas ~89-91) compara posição
+#   actual com a de 5 segundos atrás — pode falhar em cenas dinâmicas.
+# Relevância para robodog2: padrão PID de seguimento com profundidade; útil para vigilância
+#   activa. Requer câmara de profundidade — avaliar disponibilidade no Jetson Nano.
+
 #ros lib
 import rclpy
 from rclpy.node import Node

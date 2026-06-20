@@ -1,5 +1,38 @@
 #!/usr/bin/env python
 # encoding: utf-8
+# Voice_Ctrl_Mcnamu_driver_X3.py — Driver base ROSMASTER X3 (Mecanum) com controlo por voz
+# ==========================================================================================
+# Descrição: nó ROS2 que integra o driver de baixo nível do ROSMASTER X3 (rodas Mecanum)
+#   com reconhecimento de voz via Speech_Lib (Yahboom, proprietária). A cada ciclo de 0.1 s
+#   lê um comando de voz e actua directamente sobre a Rosmaster_Lib; em paralelo publica
+#   IMU, magnetómetro, tensão da bateria, velocidade actual e estados das juntas.
+#
+# Comandos de voz suportados (código Speech_Lib → acção):
+#   2 / 0  → Parar (stop imediato)
+#   4      → "Go ahead"      — linear.x = +0.5 durante 5 s
+#   5      → "Back off"      — linear.x = -0.5 durante 5 s
+#   6      → "Turn left"     — vx = 0.5, angular.z = +0.2 durante 5 s
+#   7      → "Turn right"    — vx = 0.5, angular.z = -0.2 durante 5 s
+#   10     → "Close light"   — apagar LEDs
+#   11     → "Red light"     — LEDs vermelho
+#   12     → "Green light"   — LEDs verde
+#   13     → "Blue light"    — LEDs azul
+#   14     → "Yellow light"  — LEDs amarelo
+#   15     → "Water lamps"   — efeito corrida
+#   16     → "Gradient light"— efeito gradiente
+#   17     → "Breathing light"— efeito respiração
+#   18     → "Display electricity" — efeito nível bateria
+#
+# Subscreve: /cmd_vel (Twist), /RGBLight (Int32), /Buzzer (Bool)
+# Publica:   /edition (Float32), /voltage (Float32), /joint_states (JointState),
+#            /vel_raw (Twist), /imu/data_raw (Imu), /imu/mag (MagneticField)
+#
+# Dependências: Rosmaster_Lib e Speech_Lib (bibliotecas proprietárias Yahboom — não open-source)
+# Limitações: os comandos de voz usam time.sleep() dentro do callback do timer — bloqueia o
+#   loop de publicação durante 5 s. Arquitectura inadequada para integração com Nav2.
+# Diferença X3 vs R2: car_type=1 (X3 Mecanum); sem parâmetro nav_use_rotvel.
+# Relevância para robodog2: referência para integração Speech_Lib; a arquitectura de driver
+#   deve ser reimplementada com action servers ou máquina de estados para evitar bloqueios.
 
 #public lib
 import sys

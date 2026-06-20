@@ -1,4 +1,19 @@
-from yahboom_web_savmap_interfaces.srv import WebSaveMap                            # CHANGE
+# yahboom_app_save_map_client.py — Cliente de teste do serviço WebSaveMap
+# ========================================================================
+# Script de teste/debug para o servidor yahboom_app_save_map.py.
+# Chama o serviço 'add_three_ints' (nome de serviço errado — deveria ser
+# 'yahboomAppSaveMap' para coincidir com o servidor) com mapname="mapssss".
+#
+# ATENÇÃO — bugs conhecidos:
+#   1. Nome do serviço hardcoded como 'add_three_ints' (boilerplate não atualizado)
+#      → servidor usa 'yahboomAppSaveMap'; este cliente nunca conecta ao servidor.
+#   2. mapname hardcoded como "mapssss" — apenas para teste manual.
+#
+# Este arquivo é um script de teste/desenvolvimento — não é usado em produção.
+# Relevância para robodog2: padrão de cliente assíncrono ROS2 (call_async + spin_once)
+#   útil como template para chamar serviços de navegação no robodog2.
+
+from yahboom_web_savmap_interfaces.srv import WebSaveMap
 import sys
 import rclpy
 from rclpy.node import Node

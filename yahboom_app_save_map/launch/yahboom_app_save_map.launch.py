@@ -1,3 +1,10 @@
+# yahboom_app_save_map.launch.py — Lança o servidor de salvamento de mapa via app
+# =================================================================================
+# Inicia o nó 'server' (yahboom_app_save_map.py) que aguarda pedidos do app mobile.
+# Pré-requisito: Nav2 + SLAM em execução para que map_saver_cli encontre o mapa.
+#
+# Uso:
+#   ros2 launch yahboom_app_save_map yahboom_app_save_map.launch.py
 from launch import LaunchDescription
 #from launch.actions
 from launch_ros.actions import Node

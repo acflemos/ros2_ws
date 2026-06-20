@@ -1,4 +1,23 @@
 #!/usr/bin/env python3
+# encoding: utf-8
+# robot_pose_publisher.py — Republica pose do robô de /amcl_pose → /robot_pose
+# =============================================================================
+# Subscreve /amcl_pose (PoseWithCovarianceStamped, publicado pelo AMCL durante
+# navegação) e republica a pose como PoseStamped simplificado em /robot_pose.
+# Adicionalmente, um timer de 2 s republica a última pose conhecida mesmo sem
+# novos dados do AMCL — garante que consumidores recebam pose regularmente.
+#
+# Subscreve: /amcl_pose  (geometry_msgs/PoseWithCovarianceStamped)
+# Publica:   /robot_pose (geometry_msgs/PoseStamped) — frame_id: 'map'
+#
+# Alternativa C++ em bkp_codigo_problematico/robot_pose_publisher_ros2
+# (não compila em Humble por API tf2_ros incompatível). Esta versão Python
+# é a recomendada e funciona sem modificação.
+#
+# Relevância para robodog2: útil para expor a pose do robô a nós que consomem
+#   PoseStamped simples (sem covariância), como displays ou lógica de patrulha.
+#   O robodog2 pode usar /amcl_pose diretamente, mas este wrapper simplifica
+#   a interface para nós de missão.
 
 import rclpy
 from rclpy.node import Node

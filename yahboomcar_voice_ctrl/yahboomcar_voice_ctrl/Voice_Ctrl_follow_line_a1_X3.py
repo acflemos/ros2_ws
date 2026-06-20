@@ -1,3 +1,31 @@
+# Voice_Ctrl_follow_line_a1_X3.py — Seguimento de linha colorida com voz (X3, sensor a1)
+# ========================================================================================
+# Descrição: nó ROS2 para seguimento de linha por cor HSV com controlo por voz. A câmara
+#   USB é lida directamente (VideoCapture), a imagem é processada por follow_common.color_follow,
+#   e um controlador PID (simplePID de follow_common) calcula angular.z para centrar a linha.
+#   O LiDAR (tópico /scan) detecta obstáculos e activa buzzer ao aproximar.
+#   A camada de voz selecciona a cor da linha a seguir.
+#
+# Comandos de voz suportados (código Speech_Lib → acção):
+#   22 / 0 → "Stop" — cancelar seguimento (Joy_active = True, Twist zero)
+#   23     → seguir linha vermelha  — HSV [(0,84,131), (180,253,255)]
+#   24     → seguir linha verde     — HSV [(55,105,136), (95,255,255)]
+#   25     → seguir linha azul      — HSV [(55,134,218), (125,253,255)]
+#   26     → seguir linha amarela   — HSV [(18,45,144), (125,253,255)]
+#
+# Subscreve: /JoyState (Bool), /scan (LaserScan)
+# Publica:   /cmd_vel (Twist), /linefollow/rgb (Image), /Buzzer (Bool)
+#
+# Dependências: yahboomcar_voice_ctrl.follow_common (color_follow, simplePID, ManyImgs),
+#   Speech_Lib (proprietária Yahboom)
+# Diferença X3 vs R2 (a1): a condição LiDAR é `abs(angle) > (180 - LaserAngle)` —
+#   monitoriza os ângulos traseiros/laterais extremos do sensor (ângulos próximos de ±180°).
+#   Ver Voice_Ctrl_follow_line_4ROS_R2.py que usa `abs(angle) < LaserAngle` (frontal).
+# Limitações: ResponseDist=0.00 por defeito (detecção de obstáculos desactivada); caminho
+#   HSV text hardcoded para /root/... (não portável).
+# Relevância para robodog2: padrão PID de seguimento de linha; adaptar para subscrever
+#   tópico de câmara ROS2 em vez de VideoCapture directo.
+
 #ros lib
 import rclpy
 from rclpy.node import Node

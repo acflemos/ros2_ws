@@ -1,3 +1,29 @@
+# Voice_Ctrl_colorHSV.py — Identificação de cor HSV com selecção por voz (câmara local)
+# ========================================================================================
+# Descrição: nó ROS2 que captura vídeo directamente da câmara USB (cv.VideoCapture(0)),
+#   detecta objectos coloridos por limiarização HSV e publica a posição do objecto.
+#   A camada de voz permite seleccionar a cor a seguir por comando de voz.
+#   Baseado em yahboomcar_astra/colorHSV.py mas usando câmara local em vez de tópico ROS.
+#
+# Comandos de voz suportados (código Speech_Lib → cor rastreada):
+#   72     → "Yellow" — HSV [(18,55,187), (81,253,255)]
+#   73     → "Red"    — HSV [(0,175,149), (180,253,255)]
+#   74     → "Green"  — HSV [(44,138,91), (84,255,255)]
+#   75     → "Blue"   — HSV [(83,217,196), (141,253,255)]
+#   76     → "Stop"   — parar rastreamento e publicar Twist zero
+#
+# Subscreve: (nenhum tópico ROS — lê câmara directamente via OpenCV)
+# Publica:   /Current_point (yahboomcar_msgs/Position), /cmd_vel (Twist)
+#
+# Dependências: yahboomcar_astra.astra_common (color_follow, ManyImgs, etc.),
+#   Speech_Lib (proprietária Yahboom), yahboomcar_msgs
+# Limitações: caminho HSV hardcoded para /root/yahboomcar_ros2_ws/... (não portável).
+#   Sem shebang nem encoding declarado no topo — adicionados aqui como cabeçalho.
+# Nota: este ficheiro é quase idêntico a voice_Ctrl_color_identify.py (que é standalone
+#   sem ROS2); este tem a classe como nó ROS2.
+# Relevância para robodog2: padrão de integração câmara + HSV + voz; a câmara Astra do
+#   Jetson Nano publica tópicos ROS2 — preferir subscrever Image em vez de VideoCapture.
+
 #ros lib
 import rclpy
 from rclpy.node import Node

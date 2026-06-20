@@ -1,3 +1,28 @@
+# Voice_Ctrl_follow_line_4ROS_R2.py — Seguimento de linha colorida com voz (R2, sensor 4ROS)
+# ===========================================================================================
+# Descrição: variante do seguimento de linha para R2 usando o sensor LiDAR 4ROS. Idêntico
+#   em lógica de visão e voz às versões a1, mas com a condição de detecção de obstáculos
+#   LiDAR DIFERENTE: usa `abs(angle) < LaserAngle` — monitoriza o sector FRONTAL do sensor
+#   (ângulos próximos de 0°), ao contrário das versões a1 que monitorizam os ângulos
+#   traseiros/extremos. Esta diferença reflecte a montagem inversa do sensor 4ROS no R2.
+#
+# Comandos de voz suportados (código Speech_Lib → acção):
+#   22 / 0 → "Stop" — cancelar seguimento
+#   23     → seguir linha vermelha  — HSV [(0,84,131), (180,253,255)]
+#   24     → seguir linha verde     — HSV [(55,105,136), (95,255,255)]
+#   25     → seguir linha azul      — HSV [(55,134,218), (125,253,255)]
+#   26     → seguir linha amarela   — HSV [(18,45,144), (125,253,255)]
+#
+# Subscreve: /JoyState (Bool), /scan (LaserScan)
+# Publica:   /cmd_vel (Twist), /linefollow/rgb (Image), /Buzzer (Bool)
+#
+# Dependências: yahboomcar_voice_ctrl.follow_common, Speech_Lib (proprietária Yahboom)
+# Limitações: ResponseDist=0.00 por defeito (detecção desactivada); caminho HSV hardcoded.
+# Diferença-chave vs versões a1: registerScan usa `abs(angle) < LaserAngle` (frontal)
+#   em vez de `abs(angle) > (180 - LaserAngle)` (traseiro).
+# Relevância para robodog2: confirmar orientação do LiDAR antes de escolher a condição
+#   de detecção — esta é a versão correcta quando o LiDAR aponta para a frente.
+
 #ros lib
 import rclpy
 from rclpy.node import Node

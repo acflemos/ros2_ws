@@ -1,3 +1,25 @@
+# Voice_Ctrl_follow_line_a1_R2.py — Seguimento de linha colorida com voz (R2, sensor a1)
+# ========================================================================================
+# Descrição: versão R2 do seguimento de linha com voz. O código é praticamente idêntico ao
+#   ficheiro Voice_Ctrl_follow_line_a1_X3.py, com a mesma lógica PID e os mesmos comandos
+#   de voz. A diferença relevante está em registerScan: ambos usam a mesma condição LiDAR
+#   `abs(angle) > (180 - LaserAngle)` — monitoriza ângulos traseiros/extremos (≈±150° a ±180°).
+#   Ver Voice_Ctrl_follow_line_4ROS_R2.py para a variante que monitoriza o sector frontal.
+#
+# Comandos de voz suportados (código Speech_Lib → acção):
+#   22 / 0 → "Stop" — cancelar seguimento
+#   23     → seguir linha vermelha  — HSV [(0,84,131), (180,253,255)]
+#   24     → seguir linha verde     — HSV [(55,105,136), (95,255,255)]
+#   25     → seguir linha azul      — HSV [(55,134,218), (125,253,255)]
+#   26     → seguir linha amarela   — HSV [(18,45,144), (125,253,255)]
+#
+# Subscreve: /JoyState (Bool), /scan (LaserScan)
+# Publica:   /cmd_vel (Twist), /linefollow/rgb (Image), /Buzzer (Bool)
+#
+# Dependências: yahboomcar_voice_ctrl.follow_common, Speech_Lib (proprietária Yahboom)
+# Limitações: ResponseDist=0.00 por defeito (detecção desactivada); caminho HSV hardcoded.
+# Relevância para robodog2: mesmo padrão do X3 — ver notas em Voice_Ctrl_follow_line_a1_X3.py.
+
 #ros lib
 import rclpy
 from rclpy.node import Node

@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 # encoding: utf-8
+# follow_common.py — CÓPIA de yahboomcar_linefollow/follow_common.py
+# ===================================================================
+# Mantida aqui para evitar dependência de importação entre pacotes.
+# ATENÇÃO: bugs corrigidos na versão original NÃO foram propagados para esta cópia.
+# Ver yahboomcar_linefollow/follow_common.py para a versão atualizada.
+# Nota: esta versão contém a classe simplePID com interface diferente da versão em
+#   astra_common.py — aqui simplePID recebe (kp, ki, kd) simples; em astra_common.py
+#   a versão vectorial recebe (target, P, I, D) com integrador com timestamp.
 import time
 import cv2 as cv
 import numpy as np

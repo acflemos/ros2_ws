@@ -1,4 +1,25 @@
 #!/usr/bin/env python3
+# encoding: utf-8
+# laserscan_to_point_publish.py — Converte LaserScan em Nav2 Path de pontos cartesianos
+# ======================================================================================
+# Subscreve /scan (LaserScan) e converte cada leitura polar (distância, ângulo) em
+# coordenadas cartesianas (x, y), publicando como nav_msgs/Path em /scan_points.
+#
+# ATENÇÃO — bugs conhecidos:
+#   1. laserscan_to_points() recebe (angle_min, angle_increment) mas na chamada
+#      são passados (angle_increment, angle_increment) — angle_min é ignorado.
+#      Resultado: ângulo inicial errado; pontos ficam rotacionados.
+#   2. No main(), linha "robot_pose_publisher.destroy_node()" referencia variável
+#      inexistente no escopo — lança NameError ao fechar o nó.
+#   3. Nome do nó declarado como 'robot_pose_publisher' (cópia/pasta incorreta).
+#
+# Subscreve: /scan        (sensor_msgs/LaserScan)
+# Publica:   /scan_points (nav_msgs/Path) — cada PoseStamped.pose.position representa
+#            um ponto do scan em coordenadas do frame do sensor (sem frame_id definido).
+#
+# Relevância para robodog2: utilitário simples para visualizar o LaserScan no RViz2
+#   como Path em vez de usar o display nativo. Para uso real corrigir os bugs acima.
+#   No robodog2, o LaserScan já é visualizável diretamente — este nó tem uso limitado.
 
 import rclpy
 from rclpy.node import Node

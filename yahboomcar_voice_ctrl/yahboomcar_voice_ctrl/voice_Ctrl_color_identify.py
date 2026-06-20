@@ -1,3 +1,30 @@
+# voice_Ctrl_color_identify.py — Identificação interactiva de cor HSV com feedback de voz
+# =========================================================================================
+# Descrição: script STANDALONE (não é um nó ROS2 — sem rclpy). Captura vídeo da câmara USB,
+#   permite ao utilizador seleccionar uma região de interesse (ROI) com o rato, calcula os
+#   limites HSV da cor seleccionada e anuncia a cor identificada por voz.
+#   Útil para calibrar manualmente os intervalos HSV usados nos nós de seguimento de linha.
+#
+# Fluxo de utilização:
+#   1. Iniciar o script: python voice_Ctrl_color_identify.py
+#   2. Clicar e arrastar na janela para seleccionar ROI com a cor desejada
+#   3. O sistema calcula e exibe os valores HSV mínimos e máximos da ROI
+#   4. Dizer o comando de voz "Identify" (código 60) para identificar a cor
+#
+# Comandos de voz suportados (código Speech_Lib → acção):
+#   60     → "Identify" — identificar cor da ROI seleccionada e anunciar resultado:
+#              H∈[0,179], H∈[23,56]                    → anuncia "yellow" (código 64)
+#              H∈[56,…), S<200                          → anuncia "green"  (código 63)
+#              H≥60, S>200                              → anuncia "blue"   (código 62)
+#              H_min==0 e H_max==179 (vermelho/wrap)    → anuncia "red"    (código 61)
+#
+# Dependências: follow_common (color_follow — importado com *), Speech_Lib (proprietária Yahboom)
+# Limitações: usa `from follow_common import *` sem prefixo de pacote — só funciona se
+#   executado directamente na mesma directoria ou com follow_common no Python path.
+#   Não integra com Nav2 nem publica tópicos ROS2.
+# Relevância para robodog2: ferramenta de calibração HSV; a lógica de identificação de cor
+#   por intervalo H pode ser reutilizada nos nós de detecção do robodog2.
+
 import cv2 as cv
 from Speech_Lib import Speech
 from follow_common import *

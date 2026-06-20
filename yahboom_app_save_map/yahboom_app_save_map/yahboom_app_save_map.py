@@ -1,4 +1,26 @@
-from yahboom_web_savmap_interfaces.srv import WebSaveMap                                                            
+# yahboom_app_save_map.py — Serviço ROS2 para salvar mapa via app mobile Yahboom
+# ================================================================================
+# Implementa o servidor do serviço WebSaveMap (yahboom_web_savmap_interfaces/srv).
+# Quando o app mobile Yahboom chama o serviço 'yahboomAppSaveMap', este nó:
+#   1. Gera um ID único para o mapa (MD5 de timestamp + nome)
+#   2. Corre ros2 run nav2_map_server map_saver_cli via subprocess para salvar o mapa
+#   3. Regista o mapa na base de dados SQLite local (tabela xgo_map)
+#
+# ATENÇÃO — paths hardcoded para o sistema Yahboom:
+#   map_path: /home/yahboom/cartoros2/data/maps/<nome>
+#   SQLite:   /home/yahboom/cartoros2/data/xgo.db
+#   → Adaptar para o sistema alvo antes de usar.
+#
+# Serve:     yahboomAppSaveMap (yahboom_web_savmap_interfaces/WebSaveMap)
+#              request:  mapname (string)
+#              response: response (string) — nome do mapa ou mensagem de erro
+#
+# Dependências: yahboom_web_savmap_interfaces, nav2_map_server
+# Relevância para robodog2: padrão útil para integrar salvamento de mapa via
+#   interface externa (app/web). Para o robodog2, adaptar paths e substituir
+#   SQLite por um mecanismo de persistência mais simples se não houver app Yahboom.
+
+from yahboom_web_savmap_interfaces.srv import WebSaveMap
 
 import rclpy
 from rclpy.node import Node

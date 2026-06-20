@@ -3,7 +3,7 @@
 <package format="3">
   <name>yahboom_web_savmap_interfaces</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Interface ROS2 (serviço WebSaveMap) para integração com o app mobile Yahboom. Permite salvar mapas Nav2 via chamada de serviço remota.</description>
   <maintainer email="yahboom@todo.todo">yahboom</maintainer>
   <license>TODO: License declaration</license>
 

@@ -1,5 +1,40 @@
 #!/usr/bin/env python
 # encoding: utf-8
+# Voice_Ctrl_Ackman_driver.py — Driver base ROSMASTER R2 (Ackermann) com controlo por voz
+# =========================================================================================
+# Descrição: nó ROS2 equivalente ao X3 mas para o ROSMASTER R2 (direcção Ackermann).
+#   Diferenças principais face ao X3: car_type=5 (R2), parâmetro nav_use_rotvel disponível,
+#   e a velocidade lateral (vy) é publicada em vel_raw como vy*1000 (ângulo de direcção em
+#   milésimas de grau). O estado das juntas inclui ângulo de direcção convertido para radianos.
+#
+# Comandos de voz suportados (código Speech_Lib → acção):
+#   2 / 0  → Parar (stop imediato)
+#   4      → "Go ahead"      — linear.x = +0.5 durante 5 s
+#   5      → "Back off"      — linear.x = -0.5 durante 5 s
+#   6      → "Turn left"     — vx = 0.5, angular.z = +2.0 durante 5 s
+#            ATENÇÃO: bug — usa variável global `car` em vez de `self.car` (linha ~217)
+#   7      → "Turn right"    — vx = 0.5, angular.z = +2.0 durante 5 s
+#            ATENÇÃO: gira no mesmo sentido que "Turn left" (angular.z positivo nos dois)
+#   10     → "Close light"   — apagar LEDs
+#   11     → "Red light"     — LEDs vermelho
+#   12     → "Green light"   — LEDs verde
+#   13     → "Blue light"    — LEDs azul
+#   14     → "Yellow light"  — LEDs amarelo
+#   15     → "Water lamps"   — efeito corrida
+#   16     → "Gradient light"— efeito gradiente
+#   17     → "Breathing light"— efeito respiração
+#   18     → "Display electricity" — efeito nível bateria
+#
+# Subscreve: /cmd_vel (Twist), /RGBLight (Int32), /Buzzer (Bool)
+# Publica:   /edition (Float32), /voltage (Float32), /joint_states (JointState),
+#            /vel_raw (Twist), /imu/data_raw (Imu), /imu/mag (MagneticField)
+#
+# Dependências: Rosmaster_Lib e Speech_Lib (bibliotecas proprietárias Yahboom — não open-source)
+# Limitações: mesmos problemas de bloqueio do X3 (time.sleep dentro do timer). Adicionalmente,
+#   o comando "Turn right" (código 7) usa angular.z = +2.0 em vez de -2.0 — comportamento
+#   idêntico a "Turn left"; parece ser um bug do fabricante.
+# Relevância para robodog2: robodog2 usa Mecanum (X3), não Ackermann; este ficheiro é útil
+#   apenas como estudo de diferenças de driver entre plataformas.
 
 #public lib
 import sys

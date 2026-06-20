@@ -1,5 +1,29 @@
 #!/usr/bin/env python3
 # coding: utf-8
+# voice_Ctrl_send_mark.py — Publicação de waypoints de navegação por voz (PoseStamped)
+# ======================================================================================
+# Descrição: nó ROS2 que escuta comandos de voz e publica destinos de navegação (waypoints)
+#   pré-definidos para o Nav2 através do tópico /goal_pose. Cada comando activa um waypoint
+#   com coordenadas e orientação fixas (hardcoded no mapa de demonstração Yahboom).
+#   O nó publica a cada 0.5 s apenas quando há comando de voz activo.
+#
+# Comandos de voz suportados (código Speech_Lib → destino):
+#   19     → "Goal one"    — posição (-7.12, -3.86) no mapa, orientação z=-0.648, w=0.761
+#   20     → "Goal two"    — posição (-5.43, -3.58), orientação z=0.041, w=0.999
+#   21     → "Goal three"  — posição (-5.73, -2.14), orientação z=0.732, w=0.681
+#   32     → "Goal four"   — posição (-7.11, -1.98), orientação z=-1.000, w=0.006
+#   33     → "Goal Origin" — posição (-6.26, -2.97), orientação z=-0.687, w=0.727
+#   0      → parar robot   — publica Twist zero em /cmd_vel
+#
+# Subscreve: (nenhum)
+# Publica:   /goal_pose (geometry_msgs/PoseStamped), /cmd_vel (Twist)
+#
+# Dependências: Speech_Lib (proprietária Yahboom)
+# Limitações: coordenadas dos waypoints são absolutas e específicas do mapa de demo Yahboom
+#   — necessário remapear para o ambiente real do robodog2.
+# Relevância para robodog2: padrão de integração voz + Nav2 via /goal_pose; a lógica de
+#   publicação é directamente reutilizável, apenas as coordenadas precisam de ser actualizadas.
+
 from Speech_Lib import Speech
 from geometry_msgs.msg import Twist, PoseStamped
 from rclpy.clock import Clock

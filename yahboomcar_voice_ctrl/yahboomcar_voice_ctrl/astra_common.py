@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
+# astra_common.py — CÓPIA de yahboomcar_astra/astra_common.py
+# =============================================================
+# Mantida aqui para evitar dependência de importação entre pacotes.
+# ATENÇÃO: bugs corrigidos na versão original NÃO foram propagados para esta cópia.
+# Ver yahboomcar_astra/astra_common.py para a versão atualizada.
 import time
 import cv2 as cv
 import numpy as np

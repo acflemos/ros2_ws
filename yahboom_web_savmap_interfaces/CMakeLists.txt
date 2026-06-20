@@ -1,3 +1,15 @@
+# CMakeLists.txt — yahboom_web_savmap_interfaces
+# ================================================
+# Define a interface ROS2 (serviço .srv) usada pelo app mobile Yahboom
+# para solicitar o salvamento de mapas Nav2.
+#
+# Gera (via rosidl): WebSaveMap.srv
+#   request:  string mapname
+#   response: string response
+#
+# Consumidor: yahboom_app_save_map (servidor do serviço)
+# Relevância para robodog2: modelo de como definir interfaces de serviço
+#   simples em C++ (ament_cmake) para integrar com clientes externos.
 cmake_minimum_required(VERSION 3.5)
 project(yahboom_web_savmap_interfaces)
 

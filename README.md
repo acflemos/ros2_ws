@@ -205,8 +205,8 @@ Para reativar, instalar dependências e mover de volta para `src/`.
 | `yahboomcar_visual` | ✅ | ✅ | ✅ |
 | `yahboomcar_linefollow` | ✅ | ✅ | ✅ |
 | `yahboomcar_mediapipe` | ✅ | ✅ | ✅ |
-| `yahboomcar_voice_ctrl` | ⬜ | ⬜ | ⬜ |
-| utilitários (4 pacotes) | ⬜ | ⬜ | ⬜ |
+| `yahboomcar_voice_ctrl` | ✅ | ✅ | ✅ |
+| utilitários (4 pacotes) | ✅ | ✅ | ✅ |
 
 ---
 
