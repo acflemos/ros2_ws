@@ -1,4 +1,29 @@
-#ros lib
+#!/usr/bin/env python
+# encoding: utf-8
+# colorHSV.py — Deteção de objetos por cor HSV com câmera Astra (OpenCV direto)
+# ===============================================================================
+# Nó ROS2 que abre a câmera via VideoCapture(0) e deteta objetos por cor HSV.
+# Mantém estado de calibração HSV (init → identify → tracking) controlado por teclado.
+#
+# ATENÇÃO: caminho hsv_text hardcoded para /root/yahboomcar_ros2_ws/... (linha 38).
+#          Falha em qualquer outra máquina. Corrigir para usar get_package_share_directory.
+#
+# Estados:
+#   'identify' (tecla i) — lê HSV de colorHSV.text e deteta objetos continuamente
+#   'init'     (mouse)   — desenha ROI para aprender nova cor
+#   'tracking' (espaço)  — ativo: publica posição do círculo em /Current_point
+#
+# Parâmetros ROS2 (Hmin/Smin/Vmin/Hmax/Smax/Vmax): atualizados dinamicamente
+# quando uma nova ROI é selecionada.
+#
+# Publica:
+#   /Current_point (yahboomcar_msgs/Position) — posição 2D do objeto (pixel_x, pixel_y, raio)
+#   /cmd_vel (geometry_msgs/Twist)            — zeros quando sem objeto (parar o robô)
+#
+# Relevância para robodog2: demonstra pipeline completo de visão por cor.
+# Com Jetson Nano, substituir VideoCapture(0) por subscrição ao tópico da câmera ROS2.
+
+# ros lib
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool
