@@ -1,12 +1,16 @@
+# yahboomcar_msgs/CMakeLists.txt
+# Pacote de mensagens customizadas — não gera executáveis, só tipos ROS2.
+# O rosidl_generate_interfaces() gera automaticamente código Python e C++
+# a partir dos arquivos .msg, tornando os tipos disponíveis via:
+#   from yahboomcar_msgs.msg import Target, TargetArray, Position, PointArray, ImageMsg
+
 cmake_minimum_required(VERSION 3.5)
 project(yahboomcar_msgs)
 
-# Default to C99
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
 endif()
 
-# Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
@@ -15,13 +19,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-find_package(rosidl_default_generators REQUIRED)
-find_package(geometry_msgs REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)  # gerador de código para msgs ROS2
+find_package(geometry_msgs REQUIRED)              # geometry_msgs/Point usado em PointArray
+find_package(std_msgs REQUIRED)                   # incluído mas não usado diretamente
+
+# Declara as mensagens a gerar — adicionar aqui se criar novos .msg
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/ImageMsg.msg"
   "msg/PointArray.msg"
