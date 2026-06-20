@@ -1,3 +1,6 @@
+// talker.cpp — arquivo de exemplo/boilerplate ROS2. NÃO é compilado nem usado.
+// Deixado pelo fabricante como referência de publisher mínimo. Ignorar.
+
 #include <chrono>
 #include <memory>
 

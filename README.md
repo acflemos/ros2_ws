@@ -200,7 +200,7 @@ Para reativar, instalar dependências e mover de volta para `src/`.
 | `yahboomcar_nav` | ⬜ | ⬜ | ⬜ |
 | `yahboomcar_msgs` | ✅ | ✅ | ✅ |
 | `yahboomcar_ctrl` | ⬜ | ⬜ | ⬜ |
-| `yahboomcar_base_node` | ⬜ | ⬜ | ⬜ |
+| `yahboomcar_base_node` | ✅ | ✅ | ✅ |
 | `yahboomcar_astra` | ⬜ | ⬜ | ⬜ |
 | `yahboomcar_visual` | ⬜ | ⬜ | ⬜ |
 | `yahboomcar_linefollow` | ⬜ | ⬜ | ⬜ |
