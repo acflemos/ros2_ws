@@ -1,10 +1,22 @@
-#ros lib
+#!/usr/bin/env python
+# encoding: utf-8
+# follow_line_4ROS_R2.py — Seguimento de linha colorida para R2 com YDLIDAR X4 / 4ROS
+# =====================================================================================
+# Variante R2 com YDLIDAR X4 (montado para a frente). Diferença chave vs a1_R2:
+# - LiDAR monitoriza a FRENTE: abs(angle) < LaserAngle (vs retaguarda no a1)
+# - img_flip=False (câmera virada para frente)
+# - Não publica /linefollow/rgb (publicação de debug removida)
+#
+# Subscreve: /scan (LaserScan), /JoyState (Bool)
+# Publica:   /cmd_vel (Twist), /Buzzer (Bool)
+
+# ros lib
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import CompressedImage, LaserScan, Image
-#common lib
+# common lib
 import os
 import threading
 import math

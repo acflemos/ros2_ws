@@ -1,5 +1,16 @@
 #!/usr/bin/env python
 # encoding: utf-8
+# follow_common.py — Utilitários partilhados pelos nós de seguimento de linha
+# ============================================================================
+# Contém: I/O de calibração HSV, deteção de linha por cor, PID discreto,
+# leitura de câmera e visualização. Partilhado por follow_line_a1_X3/R2 e 4ROS_R2.
+#
+# Funções principais:
+#   color_follow.object_follow() — aplica máscara HSV, encontra maior contorno,
+#                                  calcula centroide e raio do círculo envolvente
+#   PID.compute()                — PID discreto com anti-windup simples (clamp integral)
+#   read_HSV() / write_HSV()     — persiste range HSV em ficheiro .text
+
 import time
 import cv2 as cv
 import numpy as np

@@ -1,10 +1,21 @@
-#ros lib
+#!/usr/bin/env python
+# encoding: utf-8
+# follow_line_a1_R2.py — Seguimento de linha colorida para R2 com RPLIDAR A1
+# ===========================================================================
+# Variante R2 (Ackermann) do follow_line_a1_X3. Lógica idêntica mas com
+# img_flip=False (câmera virada para frente no R2) e LiDAR monitorizando retaguarda
+# (abs(angle) > 180° - LaserAngle) — igual ao X3 pois o A1 está montado para trás.
+#
+# Subscreve: /scan (LaserScan), /JoyState (Bool)
+# Publica:   /cmd_vel (Twist), /Buzzer (Bool)
+
+# ros lib
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import CompressedImage, LaserScan, Image
-#common lib
+# common lib
 import os
 import threading
 import math

@@ -1,10 +1,26 @@
-#ros lib
+#!/usr/bin/env python
+# encoding: utf-8
+# follow_line_a1_X3.py — Seguimento de linha colorida para X3 com RPLIDAR A1
+# ============================================================================
+# Nó ROS2 que abre a câmera via VideoCapture(0), deteta uma linha colorida por
+# máscara HSV e segue-a com PID angular. Evita obstáculos à retaguarda via LiDAR.
+#
+# ATENÇÃO: câmera montada virada para TRÁS no X3 → img_flip=True faz flip horizontal.
+# O LiDAR monitoriza a retaguarda (abs(angle) > 180° - LaserAngle) pelo mesmo motivo.
+#
+# Subscreve: /scan (LaserScan), /JoyState (Bool)
+# Publica:   /cmd_vel (Twist), /Buzzer (Bool)
+#
+# Limitações: caminho HSV hardcoded para /root/yahboomcar_ros2_ws/...
+# Relevância para robodog2: demonstra fusão visão+LiDAR; adaptar com tópico de câmera ROS2.
+
+# ros lib
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import CompressedImage, LaserScan, Image
-#common lib
+# common lib
 import os
 import threading
 import math
