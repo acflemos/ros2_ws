@@ -1,3 +1,26 @@
+#!/usr/bin/env python
+# encoding: utf-8
+#
+# patrol_a1_R2.py — Patrulha autónoma geométrica para o R2 (Ackermann)
+# =====================================================================
+# Versão do patrol_a1_X3 adaptada para o modelo R2 (Ackermann — carro).
+# Estrutura idêntica ao patrol_a1_X3 com diferenças nos valores padrão e
+# na máquina de estados Square (R2 faz ida e volta, não quadrado de 4 lados).
+#
+# Diferenças vs patrol_a1_X3:
+#   - Linear padrão: 0.2 m/s (X3 usa 0.5) — carro Ackermann é mais pesado
+#   - Angular padrão: 2.0 rad/s (X3 usa 1.0)
+#   - RotationScaling padrão: 0.75 (X3 usa 1.0) — compensação de drift do R2
+#   - Square: vira 180° em vez de 90° → faz "ida e volta" (não quadrado real)
+#   - Triangle: NÃO implementado neste ficheiro (apenas Square, Circle, LengthTest)
+#   - Spin com Command=="Square": inclui linear.x = self.Linear (X3 gira no lugar)
+#     O R2 não consegue girar no lugar (Ackermann) — precisa de arco para virar
+#
+# Subscritores / Publicadores: idênticos ao patrol_a1_X3.
+#
+# Relevância para robodog2: baixa — robodog2 usa X3 mecanum.
+# Útil para entender diferenças de cinemática entre X3 (holonômica) e R2 (não-holonômica).
+
 #for patrol
 #math
 import math
@@ -32,12 +55,12 @@ class YahboomCarPatrol(Node):
         self.command_src = "finish"
         self.warning = 1
         self.SetLoop = False
-        self.Linear = 0.2
+        self.Linear = 0.2   # R2: mais lento que X3 (0.5) — carro mais pesado
         self.Angular = 1.0
         self.Length = 1.0 #1.0
         self.Angle = 360.0
         self.LineScaling = 1.1
-        self.RotationScaling = 0.75
+        self.RotationScaling = 0.75  # R2: correção de drift angular (X3 usa 1.0)
         self.LineTolerance = 0.1
         self.RotationTolerance = 0.3
         #self.ResponseDist = 0.6
@@ -49,8 +72,8 @@ class YahboomCarPatrol(Node):
         self.x_start = self.position.x
         self.y_start = self.position.y
         self.error = 0.0
-        self.distance = 0.0 
-        self.last_angle = 0.0 
+        self.distance = 0.0
+        self.last_angle = 0.0
         self.delta_angle = 0.0
         self.turn_angle = 0.0
         #create publisher
@@ -78,9 +101,9 @@ class YahboomCarPatrol(Node):
         self.ResponseDist = self.get_parameter('ResponseDist').get_parameter_value().double_value
         self.declare_parameter('LaserAngle',20.0)
         self.LaserAngle = self.get_parameter('LaserAngle').get_parameter_value().double_value
-        self.declare_parameter('Linear',0.2)
+        self.declare_parameter('Linear',0.2)  # R2: padrão mais lento
         self.Linear = self.get_parameter('Linear').get_parameter_value().double_value
-        self.declare_parameter('Angular',2.0)
+        self.declare_parameter('Angular',2.0)  # R2: angular maior que X3 (1.0) para compensar
         self.Angular = self.get_parameter('Angular').get_parameter_value().double_value
         self.declare_parameter('Length',1.0)
         self.Length = self.get_parameter('Length').get_parameter_value().double_value
@@ -88,12 +111,12 @@ class YahboomCarPatrol(Node):
         self.RotationTolerance = self.get_parameter('RotationTolerance').get_parameter_value().double_value
         self.declare_parameter('RotationScaling',1.0)
         self.RotationScaling = self.get_parameter('RotationScaling').get_parameter_value().double_value
-        
-        #create a timer
+
+        # timer a 100Hz para baixa latência de controlo
         self.timer = self.create_timer(0.01,self.on_timer)
         self.index = 0
-        
-        
+
+
     def on_timer(self):
         #print("self.error: ",self.error)
         self.Switch = self.get_parameter('Switch').get_parameter_value().bool_value
@@ -106,9 +129,9 @@ class YahboomCarPatrol(Node):
         self.LaserAngle = self.get_parameter('LaserAngle').get_parameter_value().double_value
         self.RotationTolerance = self.get_parameter('RotationTolerance').get_parameter_value().double_value
         self.RotationScaling = self.get_parameter('RotationScaling').get_parameter_value().double_value
-        
+
         index = 0
-        
+
         if self.Switch==True:
             index = 0
             print("Switch True")
@@ -123,7 +146,7 @@ class YahboomCarPatrol(Node):
                     self.Command  = rclpy.parameter.Parameter('Command',rclpy.Parameter.Type.STRING,"finish")
                     all_new_parameters = [self.Command]
                     self.set_parameters(all_new_parameters)
-            
+
             elif self.Command == "Circle":
                 self.command_src = "Circle"
                 spin = self.Spin(360)
@@ -161,11 +184,11 @@ class YahboomCarPatrol(Node):
                     self.Switch  = rclpy.parameter.Parameter('Switch',rclpy.Parameter.Type.BOOL,False)
                     all_new_parameters = [self.Switch]
                     self.set_parameters(all_new_parameters)
-                
 
-                
-                    
+
+
     def advancing(self,target_distance):
+        """Avança em linha reta até target_distance (m), usando TF para medir distância."""
         self.position.x = self.get_position().transform.translation.x
         self.position.y = self.get_position().transform.translation.y
         move_cmd = Twist()
@@ -175,7 +198,7 @@ class YahboomCarPatrol(Node):
         print("distance: ",self.distance)
         self.error = self.distance - target_distance
         move_cmd.linear.x = self.Linear
-        if abs(self.error) < self.LineTolerance : 
+        if abs(self.error) < self.LineTolerance :
             print("stop")
             self.distance = 0.0
             self.pub_cmdVel.publish(Twist())
@@ -197,8 +220,9 @@ class YahboomCarPatrol(Node):
             self.moving = True
             return False
 
-        
+
     def Spin(self,angle):
+        """Vira o robô pelo ângulo especificado (graus). R2: usa linear.x durante a curva."""
         self.target_angle = radians(angle)
         self.odom_angle = self.get_odom_angle()
         self.delta_angle = self.RotationScaling * self.normalize_angle(self.odom_angle - self.last_angle)
@@ -221,7 +245,8 @@ class YahboomCarPatrol(Node):
                 self.moving = False
                 print("obstacles")
         else:
-            if self.Command == "Square": 
+            if self.Command == "Square":
+                # R2 (Ackermann) não gira no lugar — precisa de movimento linear para curvar
                 move_cmd.linear.x =  self.Linear
                 move_cmd.angular.z = copysign(self.Angular, self.error)
             elif self.Command == "Circle":
@@ -234,9 +259,10 @@ class YahboomCarPatrol(Node):
                 move_cmd.angular.z = copysign(2, self.error)'''
             self.pub_cmdVel.publish(move_cmd)
         self.moving = True
-        
-        
+
+
     def Square(self):
+        """R2 Square: ida e volta (2 segmentos de 180°) — não quadrado real de 4 lados."""
         #if self.index in range(2):
         if self.index == 0:
             print("Length")
@@ -244,13 +270,13 @@ class YahboomCarPatrol(Node):
             #sleep(0.5)
             if step1 == True:
                 #self.distance = 0.0
-                self.index = self.index + 1; 
+                self.index = self.index + 1;
                 self.Switch  = rclpy.parameter.Parameter('Switch',rclpy.Parameter.Type.BOOL,True)
                 all_new_parameters = [self.Switch]
                 self.set_parameters(all_new_parameters)
         elif self.index == 1:
             print("Spin")
-            step2 = self.Spin(180)
+            step2 = self.Spin(180)  # R2: vira 180° (não 90° como o X3)
             #sleep(0.5)
             if step2 == True:
                 self.index = self.index + 1;
@@ -265,10 +291,10 @@ class YahboomCarPatrol(Node):
                 self.index = self.index + 1;
                 self.Switch  = rclpy.parameter.Parameter('Switch',rclpy.Parameter.Type.BOOL,True)
                 all_new_parameters = [self.Switch]
-                self.set_parameters(all_new_parameters)          
+                self.set_parameters(all_new_parameters)
         elif self.index == 3:
             print("Spin")
-            step4 = self.Spin(180)
+            step4 = self.Spin(180)  # volta para a orientação inicial
             #sleep(0.5)
             if step4 == True:
                 self.index = self.index + 1;
@@ -283,30 +309,31 @@ class YahboomCarPatrol(Node):
             #self.Command == "finish"
             print("Done!")
             return True
-            
-            
+
+
 
     def get_odom_angle(self):
-         try:
+        """Lê o ângulo yaw atual do robô a partir do TF odom→base_footprint."""
+        try:
             now = rclpy.time.Time()
-            rot = self.tf_buffer.lookup_transform(self.odom_frame,self.base_frame,now)   
-            #print("oring_rot: ",rot.transform.rotation) 
+            rot = self.tf_buffer.lookup_transform(self.odom_frame,self.base_frame,now)
+            #print("oring_rot: ",rot.transform.rotation)
             cacl_rot = PyKDL.Rotation.Quaternion(rot.transform.rotation.x, rot.transform.rotation.y, rot.transform.rotation.z, rot.transform.rotation.w)
             #print("cacl_rot: ",cacl_rot)
-            angle_rot = cacl_rot.GetRPY()[2]
-           
-            
-            
-            
-    
-         except (LookupException, ConnectivityException, ExtrapolationException):
+            angle_rot = cacl_rot.GetRPY()[2]  # yaw
+
+
+
+
+        except (LookupException, ConnectivityException, ExtrapolationException):
             self.get_logger().info('transform not ready')
             return
-        
-         return angle_rot      
-        
-        
+
+        return angle_rot
+
+
     def get_position(self):
+        """Lê a posição XY atual do robô a partir do TF odom→base_footprint."""
         try:
             now = rclpy.time.Time()
             trans = self.tf_buffer.lookup_transform(self.odom_frame,self.base_frame,now)
@@ -315,8 +342,9 @@ class YahboomCarPatrol(Node):
             self.get_logger().info('transform not ready')
             raise
             return
-        
+
     def normalize_angle(self,angle):
+        """Normaliza ângulo para o intervalo [-π, π]."""
         res = angle
         #print("res: ",res)
         while res > pi:
@@ -324,8 +352,9 @@ class YahboomCarPatrol(Node):
         while res < -pi:
             res += 2.0 * pi
         return res
-    
+
     def LaserScanCallback(self,scan_data):
+        """Conta leituras próximas frontais do laser. Se >10, robô pára por obstáculo."""
         if self.ResponseDist == 0: return
         ranges = np.array(scan_data.ranges)
         sortedIndices = np.argsort(ranges)
@@ -334,13 +363,14 @@ class YahboomCarPatrol(Node):
             angle = (scan_data.angle_min + scan_data.angle_increment * i) * RAD2DEG
             if abs(angle) > (180 - self.LaserAngle):
                 if ranges[i] < self.ResponseDist: self.warning += 1
-    
+
     def JoyStateCallback(self, msg):
+        """Atualiza flag Joy_active — quando True, pausa a patrulha."""
         if not isinstance(msg, Bool): return
         self.Joy_active = msg.data
         #print(msg.data)
-        #if not self.Joy_active: self.pub_cmdVel.publish(Twist())     
-    
+        #if not self.Joy_active: self.pub_cmdVel.publish(Twist())
+
 def main():
     rclpy.init()
     class_patrol = YahboomCarPatrol("YahboomCarPatrol")

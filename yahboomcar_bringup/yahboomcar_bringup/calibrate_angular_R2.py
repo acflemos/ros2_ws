@@ -1,3 +1,24 @@
+#!/usr/bin/env python
+# encoding: utf-8
+#
+# calibrate_angular_R2.py — Calibração da odometria angular do R2 (Ackermann)
+# ============================================================================
+# Versão do calibrate_angular_X3.py adaptada para o modelo R2.
+# Estrutura quase idêntica ao X3 com duas diferenças importantes:
+#
+# Diferenças vs calibrate_angular_X3.py:
+#   1. odom_angular_scale_correction padrão: 0.65 (X3 usa 0.75)
+#      O R2 Ackermann tem geometria de rotação diferente → correção diferente
+#   2. Durante a rotação: usa move_cmd.linear.x = 0.2 (X3 usa apenas angular.z)
+#      O R2 não consegue rodar no lugar (Ackermann) — precisa de movimento linear
+#      para executar uma curva; a calibração usa um arco em vez de rotação pura
+#
+# Parâmetros ROS2 (idênticos ao X3, exceto o valor padrão do fator de correção):
+#   start_test, test_angle (360.0), speed (2.0), tolerance (1.5),
+#   odom_angular_scale_correction (0.65), odom_frame, base_frame
+#
+# Relevância para robodog2: baixa — robodog2 usa X3. Usar calibrate_angular_X3.py.
+
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist, Point,Quaternion
@@ -15,38 +36,37 @@ from math import pi
 class Calibrateangular(Node):
     def __init__(self,name):
         super().__init__(name)
-        #create a spublisher
+        #create a publisher
         self.cmd_vel = self.create_publisher(Twist,"/cmd_vel",5)
         #declare_parameter
         self.declare_parameter('rate',20.0)
         self.rate = self.get_parameter('rate').get_parameter_value().double_value
-        
+
         self.declare_parameter('test_angle',360.0)
         self.test_angle = self.get_parameter('test_angle').get_parameter_value().double_value
-        self.test_angle = radians(self.test_angle)
-        
+        self.test_angle = radians(self.test_angle)  # converte graus → rad
+
         self.declare_parameter('speed',2.0)
         self.speed = self.get_parameter('speed').get_parameter_value().double_value
-        
+
         self.declare_parameter('tolerance',1.5)
         self.tolerance = self.get_parameter('tolerance').get_parameter_value().double_value
-        
+
+        # R2: fator padrão = 0.65 (X3 usa 0.75) — geometria Ackermann diferente
         self.declare_parameter('odom_angular_scale_correction',0.65)
         self.odom_angular_scale_correction = self.get_parameter('odom_angular_scale_correction').get_parameter_value().double_value
-        
+
         self.declare_parameter('start_test',False)
-        
-        
+
         self.declare_parameter('direction',1.0)
         self.direction = self.get_parameter('direction').get_parameter_value().double_value
-        
+
         self.declare_parameter('base_frame','base_footprint')
         self.base_frame = self.get_parameter('base_frame').get_parameter_value().string_value
-        
+
         self.declare_parameter('odom_frame','odom')
         self.odom_frame = self.get_parameter('odom_frame').get_parameter_value().string_value
-        
-        
+
         #init the tf listener
         self.tf_buffer = Buffer()
         self.tf_listener = TransformListener(self.tf_buffer, self)
@@ -56,24 +76,25 @@ class Calibrateangular(Node):
         self.x_start = self.position.x
         self.y_start = self.position.y
         self.first_angle = 0
-        
+
         print ("finish init work")
         now = rclpy.time.Time()
-        #trans = self.tf_buffer.lookup_transform(self.odom_frame,self.base_frame,now,timeout=Duration(seconds = 10.0))               
-        #create timer 
+        #trans = self.tf_buffer.lookup_transform(self.odom_frame,self.base_frame,now,timeout=Duration(seconds = 10.0))
         self.reverse = 1
         self.turn_angle = 0
         self.delta_angle  = 0
+        # timer a 100Hz para medição precisa do delta angular
         self.timer = self.create_timer(0.01, self.on_timer)
         self.odom_angle = self.get_odom_angle()
         self.last_angle = self.odom_angle
         self.test_angle *= self.reverse
         self.error = 0
+
     def on_timer(self):
         self.start_test = self.get_parameter('start_test').get_parameter_value().bool_value
         self.odom_angular_scale_correction = self.get_parameter('odom_angular_scale_correction').get_parameter_value().double_value
         self.test_angle = self.get_parameter('test_angle').get_parameter_value().double_value
-        self.test_angle = radians(self.test_angle) #角度转成弧度
+        self.test_angle = radians(self.test_angle) #角度转成弧度 — converte graus para radianos
         self.speed = self.get_parameter('speed').get_parameter_value().double_value
         move_cmd = Twist()
         self.test_angle *= self.reverse
@@ -81,11 +102,13 @@ class Calibrateangular(Node):
         if self.start_test:
             self.error = self.test_angle - self.turn_angle
             if self.start_test and (abs(self.error) > self.tolerance or self.error==0) :
+                # R2: usa movimento linear durante rotação (Ackermann não gira no lugar)
+                # X3: move_cmd.linear.x = 0.0 (gira no lugar)
                 move_cmd.linear.x = 0.2
                 move_cmd.angular.z = copysign(self.speed, self.error)
                 #print("angular: ",move_cmd.angular.z)
                 self.cmd_vel.publish(move_cmd)
-                self.odom_angle = self.get_odom_angle() 
+                self.odom_angle = self.get_odom_angle()
                 self.delta_angle = self.odom_angular_scale_correction * self.normalize_angle(self.odom_angle - self.first_angle)
                 #print("delta_angle: ",self.delta_angle)
                 self.turn_angle += self.delta_angle
@@ -93,7 +116,7 @@ class Calibrateangular(Node):
                 self.error = self.test_angle - self.turn_angle
                 print("error: ",self.error)
                 self.first_angle = self.odom_angle
-                
+
                 #print("first_angle: ",self.first_angle)
             else:
                 #self.error = 0.0
@@ -102,37 +125,39 @@ class Calibrateangular(Node):
                 self.start_test  = rclpy.parameter.Parameter('start_test',rclpy.Parameter.Type.BOOL,False)
                 all_new_parameters = [self.start_test]
                 self.set_parameters(all_new_parameters)
-                self.reverse = -self.reverse
+                self.reverse = -self.reverse  # alterna direção a cada teste
                 self.first_angle = 0
-                
+
         else:
             #self.error = 0.0
             self.cmd_vel.publish(Twist())
-            self.start_test  = rclpy.parameter.Parameter('start_test',rclpy.Parameter.Type.BOOL,False)           
+            self.start_test  = rclpy.parameter.Parameter('start_test',rclpy.Parameter.Type.BOOL,False)
             all_new_parameters = [self.start_test]
             self.set_parameters(all_new_parameters)
-            
 
 
     def get_odom_angle(self):
-         try:
+        """Lê o ângulo yaw atual do robô a partir do TF odom→base_footprint."""
+        try:
             now = rclpy.time.Time()
-            rot = self.tf_buffer.lookup_transform(self.odom_frame,self.base_frame,now)   
-            #print("oring_rot: ",rot.transform.rotation) 
+            rot = self.tf_buffer.lookup_transform(self.odom_frame,self.base_frame,now)
+            #print("oring_rot: ",rot.transform.rotation)
             cacl_rot = PyKDL.Rotation.Quaternion(rot.transform.rotation.x, rot.transform.rotation.y, rot.transform.rotation.z, rot.transform.rotation.w)
             #print("cacl_rot: ",cacl_rot)
-            angle_rot = cacl_rot.GetRPY()[2]
+            angle_rot = cacl_rot.GetRPY()[2]  # yaw
             #print("angle_rot: ",angle_rot)
-            
-            
-            
-    
-         except (LookupException, ConnectivityException, ExtrapolationException):
+
+
+
+
+        except (LookupException, ConnectivityException, ExtrapolationException):
             self.get_logger().info('transform not ready')
             return
-        
-         return angle_rot   
+
+        return angle_rot
+
     def normalize_angle(self,angle):
+        """Normaliza ângulo para o intervalo [-π, π]."""
         res = angle
         #print("res: ",res)
         while res > pi:
@@ -140,10 +165,9 @@ class Calibrateangular(Node):
         while res < -pi:
             res += 2.0 * pi
         return res
-         
-            
- 
-         
+
+
+
 def main():
     rclpy.init()
     class_calibrateangular = Calibrateangular("calibrate_angular")
