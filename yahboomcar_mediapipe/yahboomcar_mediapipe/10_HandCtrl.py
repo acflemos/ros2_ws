@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 10_HandCtrl.py — Standalone: controlo de efeitos visuais por ângulo de dedo
+# =============================================================================
+# Usa o ângulo entre o polegar (landmark 4) e o indicador (landmark 8) para
+# controlar intensidade de efeitos aplicados ao frame: cor (passthrough),
+# limiarização binária, desfoque gaussiano, rotação de matiz (hue), e
+# contraste CLAHE. Alterna entre efeitos com a tecla 'F'.
+#
+# NÃO é nó ROS2 — executa standalone com VideoCapture(0).
+#
+# Dependências: mediapipe, opencv-python, numpy
+# Limitações:   Sem publicação ROS2. Comentários em chinês nos blocos de efeitos
+#               (original Yahboom). O método findHands devolve imagem separada
+#               mas findPosition opera sobre frame original — uso paralelo correto.
+# Relevância para robodog2: padrão de mapeamento ângulo→valor (np.interp) é
+#   diretamente aplicável para controlo de velocidade/direção do robô por gesto;
+#   técnica útil para interface de teleoperation sem hardware adicional.
 import math
 import time
 import cv2 as cv

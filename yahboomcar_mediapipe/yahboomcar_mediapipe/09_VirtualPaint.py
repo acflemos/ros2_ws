@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 09_VirtualPaint.py — Standalone: pintura virtual com gestos de mão
+# ===================================================================
+# Permite desenhar no ar usando o dedo indicador. Dois dedos levantados
+# (indicador + médio) ativam o modo seleção de cor na barra superior;
+# só o indicador levantado ativa o modo desenho. Inclui borracha (cor preta).
+# O canvas desenhado é fundido com o frame ao vivo via bitwise operations.
+#
+# NÃO é nó ROS2 — executa standalone com VideoCapture(0).
+#
+# Dependências: mediapipe, opencv-python, numpy
+# Limitações:   Sem publicação ROS2; deteção de polegar usa ângulos internos
+#               (calc_angle) em vez da comparação simples de coordenadas Y.
+#               Condição `fingers[1] and fingers[2] == False` tem precedência
+#               errada — deve ser `fingers[1] and (fingers[2] == False)`.
+# Relevância para robodog2: demonstração de controlo gestual; a lógica de
+#   deteção de gestos (fingersUp, calc_angle) é reutilizável para comandos
+#   de navegação do robô.
 import math
 import time
 import cv2 as cv

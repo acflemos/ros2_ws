@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 02_PoseDetector.py — Nó ROS2 para deteção de pose corporal com MediaPipe
+# =========================================================================
+# Deteta o corpo humano completo (33 landmarks — cabeça, tronco, membros)
+# e publica as coordenadas 3D normalizadas como array de pontos.
+#
+# Publica:   /mediapipe/points  (yahboomcar_msgs/PointArray)
+#
+# Dependências: mediapipe, opencv-python, yahboomcar_msgs
+# Limitações:   Captura direta via VideoCapture(0) — não subscreve
+#               tópico de câmara ROS2. Variável `index` declarada mas
+#               nunca usada no loop principal.
+# Relevância para robodog2: permite ao robô reconhecer postura/posição
+#   humana para seguimento ou resposta a comandos corporais; funciona
+#   bem na Jetson Nano com MediaPipe CPU.
 
 #import ros lib
 import rclpy

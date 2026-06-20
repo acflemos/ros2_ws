@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 01_HandDetector.py — Nó ROS2 para deteção de mãos com MediaPipe
+# ================================================================
+# Deteta até 2 mãos na imagem da câmara e publica os 21 landmarks
+# de cada mão como array de pontos 3D normalizados (x, y, z ∈ [0,1]).
+#
+# Publica:   /mediapipe/points  (yahboomcar_msgs/PointArray)
+#
+# Dependências: mediapipe, opencv-python, yahboomcar_msgs
+# Limitações:   Captura direta via VideoCapture(0) — não subscreve
+#               tópico de câmara ROS2; exige câmara USB local.
+#               Queue size 1000 no publisher é excessivo para uso real.
+# Relevância para robodog2: base para controlo gestual do robô;
+#   útil na Jetson Nano com câmara CSI/USB — porta o pipeline
+#   MediaPipe Hands para publicação ROS2.
 
 #import ros lib
 import rclpy

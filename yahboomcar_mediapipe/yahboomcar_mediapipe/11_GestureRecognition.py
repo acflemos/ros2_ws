@@ -1,5 +1,23 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 11_GestureRecognition.py — Standalone: reconhecimento de gestos personalizados
+# ===============================================================================
+# Reconhece ~13 gestos com uma mão: Zero, One, Two, Three, Four, Five, Six,
+# Seven, Eight, OK, Rock, Thumb_up, Thumb_down, Heart_single.
+# Combina contagem de dedos levantados (fingersUp) com distâncias entre
+# landmarks e ângulos inter-juntas (calc_angle) para distinção precisa.
+#
+# NÃO é nó ROS2 — executa standalone com VideoCapture(0).
+#
+# Dependências: mediapipe, opencv-python, numpy
+# Limitações:   Sem publicação ROS2. Comentário com gestos em chinês preservado
+#               no código original. Reconhecimento baseado em heurísticas —
+#               pode confundir gestos em iluminação adversa.
+#               lmList é partilhada entre mãos num loop mas calc_angle usa
+#               sempre a primeira mão detetada.
+# Relevância para robodog2: módulo mais completo para comando gestual; integrar
+#   como nó ROS2 publicando o nome do gesto seria direto — alto valor para
+#   teleoperação sem controlo remoto físico na Jetson Nano.
 import math
 import time
 import cv2 as cv

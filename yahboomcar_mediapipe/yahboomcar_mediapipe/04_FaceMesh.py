@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 04_FaceMesh.py — Nó ROS2 para face mesh com MediaPipe (468 landmarks)
+# ======================================================================
+# Deteta até 2 rostos e publica os 468 landmarks 3D da malha facial de
+# cada rosto detetado concatenados num único PointArray.
+#
+# Publica:   /mediapipe/points  (yahboomcar_msgs/PointArray)
+#
+# Dependências: mediapipe, opencv-python, yahboomcar_msgs
+# Limitações:   Captura direta via VideoCapture(0). Com múltiplos rostos
+#               os pontos são concatenados sem separação — subscriber precisa
+#               saber que cada bloco de 468 pontos corresponde a um rosto.
+# Relevância para robodog2: base para vigilância facial e deteção de
+#   expressões; na Jetson Nano é viável em modo CPU com 1-2 rostos.
+
 #import ros lib
 import rclpy
 from rclpy.node import Node

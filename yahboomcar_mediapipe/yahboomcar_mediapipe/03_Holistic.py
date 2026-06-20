@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 03_Holistic.py — Nó ROS2 com pipeline Holistic do MediaPipe (face+corpo+mãos)
+# ==============================================================================
+# Combina deteção simultânea de face mesh (468 pts), pose corporal (33 pts) e
+# ambas as mãos (21 pts cada), publicando todos os landmarks num único tópico.
+# O total de pontos varia: até ~543 se todos presentes (468+33+21+21).
+#
+# Publica:   /mediapipe/points  (yahboomcar_msgs/PointArray)
+#
+# Dependências: mediapipe, opencv-python, yahboomcar_msgs
+# Limitações:   Captura direta via VideoCapture(0). Pipeline Holistic é
+#               computacionalmente pesado — FPS reduzido em hardware limitado.
+#               Os pontos de face, pose e mãos são concatenados sem separador,
+#               dificultando distinção no subscriber.
+# Relevância para robodog2: o pipeline mais completo; útil para interação
+#   rica, mas exige GPU ou NPU na Jetson Nano para desempenho aceitável.
+
 #import ros lib
 import rclpy
 from rclpy.node import Node

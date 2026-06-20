@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 07_FaceDetection.py — Standalone: deteção de rosto com MediaPipe (bounding box)
+# ================================================================================
+# Deteta rostos na imagem e devolve bounding boxes com score de confiança.
+# Desenha retângulos estilizados ("fancy draw") com cantos marcados.
+# Mais leve que FaceMesh (04) — só localiza o rosto, sem landmarks internos.
+#
+# NÃO é nó ROS2 — executa standalone com VideoCapture(0).
+#
+# Dependências: mediapipe, opencv-python
+# Limitações:   Sem publicação ROS2; para integrar no robodog2 seria necessário
+#               encapsular num nó e publicar as bboxes como tópico.
+# Relevância para robodog2: ponto de partida simples para vigilância facial
+#   (detetar presença humana); adequado para Jetson Nano — MediaPipe CPU
+#   tem boa performance para deteção de rosto sem GPU.
 import mediapipe as mp
 import cv2 as cv
 import time

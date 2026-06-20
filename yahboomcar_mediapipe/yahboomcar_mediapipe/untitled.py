@@ -1,3 +1,16 @@
+# untitled.py — Rascunho ROS1 de HandDetector (não funcional no ROS2)
+# ====================================================================
+# Contém uma versão parcial da classe HandDetector usando rospy.Publisher
+# (API ROS1) — NÃO compatível com ROS2 Humble.
+# Não tem shebang, não tem imports (rospy, mp, cv, np, Point, PointArray
+# são todos referenciados mas não importados), e não tem entry point válido.
+#
+# ERROS: usa rospy (ROS1); imports ausentes; sem shebang; sem encoding.
+# Este arquivo é provavelmente um rascunho abandonado durante a migração
+# ROS1→ROS2 — a versão correta e funcional é 01_HandDetector.py.
+#
+# Relevância para robodog2: nenhuma utilidade direta; manter apenas como
+#   referência histórica de como era a interface ROS1.
 class HandDetector:
     def __init__(self, mode=False, maxHands=2, detectorCon=0.5, trackCon=0.5):
         self.mpHand = mp.solutions.hands

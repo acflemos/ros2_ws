@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 06_FaceLandmarks.py — Standalone: landmarks faciais com dlib (68 pontos)
+# =========================================================================
+# Deteta rostos com HOG+SVM do dlib e mapeia 68 landmarks faciais usando o
+# modelo shape_predictor_68. Inclui métodos para extrair regiões (olhos,
+# lábios, sobrancelhas) e aplicar efeitos visuais (prettify_face).
+#
+# NÃO é nó ROS2 — executa standalone com VideoCapture(0).
+#
+# AVISO: `prettify_face` referencia `landmarks` como variável global em vez
+#   de usar `self` — só funciona porque `landmarks` é criado no bloco
+#   `__main__`; falha se a classe for instanciada de outro módulo.
+#
+# Dependências: dlib, opencv-python, numpy
+#   Requer ficheiro externo: ./file/shape_predictor_68_face_landmarks.dat
+#   (não incluído no repositório — download separado de ~100 MB)
+# Limitações:   dlib não está disponível por padrão no ROSMASTER X3;
+#               instalação pode ser complexa na Jetson Nano (compilar de fonte).
+# Relevância para robodog2: referência para landmarks faciais detalhados;
+#   MediaPipe Face Mesh (04) é preferível na Jetson Nano por ser mais fácil
+#   de instalar e mais rápido.
 import time
 import dlib
 import cv2 as cv

@@ -1,5 +1,29 @@
 #!/usr/bin/env python2
 # encoding: utf-8
+# 05_FaceEyeDetection.py — Nó ROS2 para deteção de rosto e olhos com Haar cascade
+# =================================================================================
+# Deteta rostos e olhos usando classificadores Haar cascade do OpenCV e publica
+# o frame anotado como imagem ROS2. Alternância entre modos face/eye/face_eye
+# com a tecla 'F'.
+#
+# ERRO: shebang diz `python2` mas usa rclpy (ROS2) — deve ser `python3`.
+# ERRO: `faceDetect` carrega o XML de olhos em vez do XML de rostos (ambas as
+#   linhas apontam para haarcascade_eye.xml — o classificador de rosto não é
+#   carregado corretamente).
+# ERRO: caminhos dos XML hardcoded para `/root/yahboomcar_ros2_ws/...` —
+#   não funcionará fora do ambiente Yahboom original.
+# ERRO: `self.pub_rgb.unregister()` é API ROS1 — em ROS2 não existe.
+#
+# Publica:   /FaceEyeDetection/image  (sensor_msgs/Image)
+#
+# Dependências: opencv-python (Haar cascades incluídos), cv_bridge,
+#               yahboomcar_msgs, sensor_msgs
+# Limitações:   Haar cascade é menos preciso que MediaPipe; caminhos
+#               hardcoded impedem portabilidade.
+# Relevância para robodog2: abordagem alternativa leve (sem MediaPipe)
+#   para deteção de rostos; Haar cascades são rápidos na Jetson Nano CPU,
+#   mas os erros acima precisam ser corrigidos antes do uso.
+
 #import ros lib
 import rclpy
 from rclpy.node import Node

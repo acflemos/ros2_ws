@@ -1,5 +1,23 @@
 #!/usr/bin/env python3
 # encoding: utf-8
+# 08_Objectron.py — Standalone: deteção 3D de objetos com MediaPipe Objectron
+# ============================================================================
+# Deteta e rastreia objetos 3D em tempo real usando o modelo Objectron do
+# MediaPipe. Suporta 4 categorias: Shoe, Chair, Cup, Camera. Alterna entre
+# modelos com a tecla 'F'.
+#
+# ATENÇÃO: MediaPipe Objectron foi DESCONTINUADO em março de 2023.
+#   A solução foi removida das versões recentes do mediapipe (>= 0.10).
+#   Este código NÃO funciona com mediapipe atual — requer versão antiga (~0.8.x).
+#
+# NÃO é nó ROS2 — executa standalone com VideoCapture(0).
+#
+# Dependências: mediapipe (versão antiga ≤ 0.9.x), opencv-python
+# Limitações:   API descontinuada — não usar em projetos novos.
+#               Resolução configurada para 1080x720 (exige câmara compatível).
+# Relevância para robodog2: código de referência histórico; para deteção 3D
+#   de objetos na Jetson Nano considerar YOLOv8 ou MediaPipe Object Detection
+#   (substituto moderno do Objectron).
 import mediapipe as mp
 import cv2 as cv
 import time
