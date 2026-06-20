@@ -1,7 +1,25 @@
+# rtabmap_viz_launch.py
+# ======================
+# Visualizador gráfico do RTAB-Map (rtabmap_viz) — alternativa ao RViz2 para RTAB-Map.
+# Mostra a nuvem de pontos 3D, grafo de poses e mapa de ocupação em tempo real.
+#
+# Argumentos:
+#   use_sim_time  — false (hardware real); true para Gazebo
+#   qos           — QoS dos tópicos de entrada (2 = Best Effort; 1 = Reliable)
+#
+# Subscreve (via remappings):
+#   /camera/color/image_raw      — imagem RGB da câmera Astra
+#   /camera/color/camera_info    — calibração da câmera
+#   /camera/depth/image_raw      — imagem de profundidade
+#   /odom                        — odometria do robô
+#
+# Nota: requer rtabmap_ros instalado — sudo apt install ros-humble-rtabmap-ros
+
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+
 
 def generate_launch_description():
 

@@ -197,7 +197,7 @@ Para reativar, instalar dependências e mover de volta para `src/`.
 | `yahboomcar_bringup` | ✅ | ✅ | ✅ |
 | `yahboomcar_laser` | ✅ | ✅ | ✅ |
 | `yahboomcar_description` | ⬜ | ⬜ | ⬜ |
-| `yahboomcar_nav` | ⬜ | ⬜ | ⬜ |
+| `yahboomcar_nav` | ✅ | ✅ | ✅ |
 | `yahboomcar_msgs` | ✅ | ✅ | ✅ |
 | `yahboomcar_ctrl` | ✅ | ✅ | ✅ |
 | `yahboomcar_base_node` | ✅ | ✅ | ✅ |
