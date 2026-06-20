@@ -1,7 +1,37 @@
+# imu_filter_param.yaml — Parâmetros do imu_filter_madgwick para o ROSMASTER X3/R2/X1
+# ======================================================================================
+# Usado pelo nó imu_filter_madgwick_node nos launch files de bringup.
+# O filtro de Madgwick funde acelerómetro + giroscópio para produzir orientação (quaternion).
+#
+# Tópicos (geridos pelo imu_filter_madgwick):
+#   Entrada: /imu/data_raw (Imu sem orientação) — publicado pelo driver de hardware
+#   Saída:   /imu/data    (Imu com orientação)  — consumido pelo EKF (robot_localization)
+#   Opcional: /imu/mag (MagneticField)           — desativado (use_mag: false)
+#
+# Relevância para o robodog2:
+#   Estes parâmetros são reutilizados diretamente no rbd2_bringup.
+#   O imu_filter_madgwick é um pacote ROS2 padrão — não precisa de modificações.
+#   Apenas verificar se o frame_id 'base_link' corresponde ao URDF do robodog2.
+
 imu_filter_madgwick:
     ros__parameters:
+        # frame fixo de referência para o filtro (deve corresponder ao frame base do URDF)
         fixed_frame: "base_link"
+
+        # use_mag: false — magnetómetro desativado
+        # Motivo: interferências magnéticas em ambientes fechados causam deriva de orientação.
+        # Madgwick funciona bem sem magnetómetro usando apenas acelerómetro + giroscópio.
         use_mag: false
+
+        # publish_tf: false — o EKF (robot_localization) publica o TF odom→base_footprint
+        # Se true, o filtro publicaria um TF world→imu_link (conflito com EKF)
         publish_tf: false
+
+        # world_frame: "enu" — convenção ENU (East-North-Up)
+        # ROS2 usa ENU como padrão; NED seria para sistemas aeronáuticos
         world_frame: "enu"
+
+        # orientation_stddev: desvio padrão da orientação estimada (radianos)
+        # Valor mais baixo = mais confiança na estimativa de orientação
+        # Aumentar se o IMU for ruidoso; diminuir se for preciso
         orientation_stddev: 0.05

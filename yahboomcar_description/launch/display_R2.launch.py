@@ -1,3 +1,16 @@
+# display_R2.launch.py — Visualização estática do ROSMASTER R2 no RViz2 (ROS2)
+#
+# Finalidade: lança robot_state_publisher + joint_state_publisher + RViz2
+#             para visualizar o modelo 3D do R2 (Ackermann) sem hardware real.
+#
+# Argumentos:
+#   gui        (default: true)  — usa joint_state_publisher_gui (com sliders)
+#   model      (default: yahboomcar_R2.urdf.xacro) — caminho para o URDF
+#   rvizconfig (default: yahboomcar.rviz)           — configuração do RViz2
+#
+# Uso:
+#   ros2 launch yahboomcar_description display_R2.launch.py
+
 from ament_index_python.packages import get_package_share_path
 
 from launch import LaunchDescription
