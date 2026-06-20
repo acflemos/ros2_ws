@@ -1,5 +1,20 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# encoding: utf-8
+# astra_image_flip.py — Flip horizontal de imagem comprimida JPEG
+# ================================================================
+# Nó ROS2 que subscreve um tópico de imagem comprimida (CompressedImage JPEG),
+# descomprime, redimensiona para 640×480, aplica flip horizontal (espelhamento)
+# e republica como nova CompressedImage JPEG. Exibe também localmente com imshow.
+# Útil quando a câmara está montada invertida ou para corrigir orientação.
+#
+# Subscreve: /image_raw/compressed   (sensor_msgs/CompressedImage) — entrada JPEG
+# Publica:   /image_flip/compressed  (sensor_msgs/CompressedImage) — saída JPEG espelhada
+#
+# Limitações: usa msg.data.tostring() (depreciado no Python 3 — usar tobytes()).
+#             Requer display gráfico para cv.imshow; queue_size=1 pode descartar frames.
+# Relevância para robodog2: util se a câmara Astra ou USB estiver montada invertida
+#             na Jetson Nano; adaptar para subscrever /camera/color/image_raw/compressed.
+
 import rclpy
 from rclpy.node import Node
 import cv2 as cv

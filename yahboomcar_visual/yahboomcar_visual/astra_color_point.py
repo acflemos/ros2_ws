@@ -1,4 +1,20 @@
-import rclpy 
+#!/usr/bin/env python
+# encoding: utf-8
+# astra_color_point.py — Sincronização RGB + Depth com ApproximateTimeSynchronizer
+# ==================================================================================
+# Nó ROS2 que subscreve simultaneamente os tópicos de imagem RGB e profundidade da
+# câmara Astra, sincronizando-os com tolerância de 0.5 s via message_filters, e
+# exibe ambas as janelas com cv.imshow para depuração visual.
+#
+# Subscreve: /camera/color/image_raw  (sensor_msgs/Image, bgr8)    — imagem RGB
+#            /camera/depth/image_raw  (sensor_msgs/Image, 32FC1)   — imagem de profundidade
+#
+# Limitações: apenas exibe imagens localmente (sem publicação); sem frame_id no sync.
+#             Janela cv.imshow requer display gráfico (não funciona sem DISPLAY).
+# Relevância para robodog2: ponto de partida para fusão RGB+Depth na Jetson Nano;
+#             adaptar publicando PointCloud2 com cores para detecção de obstáculos 3D.
+
+import rclpy
 from rclpy.node import Node
 import cv2 as cv
 import message_filters

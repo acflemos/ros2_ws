@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# encoding: utf-8
+# QRcode_Create.py — Geração de QR Code com logo opcional
+# ========================================================
+# Script standalone (sem ROS2) que cria um QR Code a partir de texto fornecido
+# pelo utilizador via terminal, com suporte a logo centralizado e correção de
+# erros nível H (≈30%). Guarda o resultado em JPEG e exibe com matplotlib.
+#
+# Uso: python3 QRcode_Create.py
+#      (solicita texto interativamente; espera 'yahboom.jpg' no diretório atual)
+#
+# Limitações: usa Image.ANTIALIAS (depreciado no Pillow ≥10 — substituir por
+#             Image.LANCZOS). Caminho do logo hardcoded relativo ao cwd.
+#             Não é um nó ROS2 — não pode ser lançado com ros2 run.
+# Relevância para robodog2: gerar QR Codes de identificação para testes de
+#             deteção; integrar QRcode_Parsing.py num nó ROS2 para missões de
+#             vigilância com leitura automática de marcadores.
+
 import os
 import qrcode
 from PIL import Image

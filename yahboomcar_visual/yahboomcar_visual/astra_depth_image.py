@@ -1,3 +1,19 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# astra_depth_image.py — Exibição da imagem de profundidade da câmara Astra
+# ==========================================================================
+# Nó ROS2 que subscreve o tópico de profundidade da câmara Astra (formato 32FC1,
+# valores em metros), redimensiona para 640×480 e exibe com cv.imshow para
+# depuração. Não republica — uso exclusivo de visualização local.
+#
+# Subscreve: /camera/depth/image_raw (sensor_msgs/Image, 32FC1) — mapa de profundidade
+#
+# Limitações: sem publicação de saída; requer display gráfico (DISPLAY).
+#             Decodifica apenas 32FC1 (float, metros); o formato 16UC1 (mm) não é
+#             tratado apesar de listado na variável encoding.
+# Relevância para robodog2: referência para leitura bruta de profundidade; na Jetson
+#             Nano combinar com detecção de objetos para estimativa de distância.
+
 import rclpy
 from rclpy.node import Node
 import cv2 as cv

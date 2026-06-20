@@ -1,3 +1,24 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# simple_AR.py — Realidade aumentada com deteção de checkerboard 6×9
+# ==================================================================
+# Nó ROS2 que captura frames diretamente da webcam via cv2.VideoCapture(0)
+# (não subscreve tópico ROS2), deteta padrão de xadrez 6×9, estima pose 3D
+# com solvePnPRansac e sobrepõe um de 12 gráficos 3D pré-definidos.
+# Publica o frame processado e aceita comandos de troca de gráfico via String.
+#
+# Subscreve: /Graphics_topic  (std_msgs/String)    — nome do gráfico a exibir
+# Publica:   /simpleAR/camera (sensor_msgs/Image)  — frame com AR sobreposto
+#
+# Limitações: usa VideoCapture(0) diretamente — conflito se outro nó usar a câmara.
+#             Parâmetros de calibração hardcoded em
+#             '/root/yahboomcar_ros2_ws/.../astra.yaml' — não encontrado no Jetson.
+#             Sem calibração, solvePnPRansac falha silenciosamente (distCoeffs vazio).
+#             Gráficos dependem de índices fixos na lista axis (frágil a reordenação).
+# Relevância para robodog2: demonstração de AR; para uso real na Jetson Nano,
+#             substituir VideoCapture por subscrição de tópico e carregar yaml de
+#             caminho configurável via parâmetro ROS2.
+
 #common lib
 import os
 import sys

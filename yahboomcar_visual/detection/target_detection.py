@@ -1,5 +1,27 @@
 #!/usr/bin/env python3
-# -*-coding: utf-8 -*-
+# encoding: utf-8
+# target_detection.py — Deteção de objetos COCO (SSD MobileNet v2) + Pose OpenPose
+# ==================================================================================
+# Script standalone (sem ROS2) que combina dois modelos de visão computacional:
+#   1. Target_Detection: SSD MobileNet v2 (TensorFlow) — deteta 90 classes COCO,
+#      desenha bounding boxes e labels sobre o frame da webcam.
+#   2. openpose: modelo OpenPose leve (graph_opt.pb) — estima 18 pontos corporais
+#      e desenha o esqueleto humano sobre o frame.
+# Alterna entre os dois modos pressionando 'F'. Encerra com 'Q'.
+#
+# Uso: python3 target_detection.py
+#      (requer 'object_detection_coco.txt', 'frozen_inference_graph.pb',
+#       'ssd_mobilenet_v2_coco.txt' e 'graph_opt.pb' no diretório de trabalho)
+#
+# Limitações: todos os modelos são carregados no import (não lazy) — se algum
+#             ficheiro estiver ausente, o script crasha ao arrancar.
+#             VideoCapture(0) direto — não integrado em ROS2.
+#             Sem GPU: DNN corre na CPU; lento na Jetson Nano sem CUDA/TensorRT.
+# Relevância para robodog2: referência para deteção de pessoas em missões de
+#             vigilância; para robodog2, integrar num nó ROS2 com input da câmara
+#             Astra e output de BoundingBox publicado como custom msg ou vision_msgs.
+#
+# Autor original: panjq (pan_jinquan@163.com) — 2019-07-29
 """
     @Project: python-learning-notes
     @File   : openpose_for_image_test.py

@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# encoding: utf-8
+# QRcode_Parsing.py — Leitura e decodificação de QR Codes por câmara
+# ====================================================================
+# Script standalone (sem ROS2) que captura frames da webcam via VideoCapture(0),
+# deteta e decodifica QR Codes e barcodes com pyzbar, desenha bounding box
+# e exibe o conteúdo decodificado diretamente no frame (suporte a UTF-8/Chinese).
+# Imprime resultados no terminal e exibe com cv.imshow em loop até pressionar 'q'.
+#
+# Uso: python3 QRcode_Parsing.py
+#      (requer fonte '../font/Block_Simplified.TTF' — caminho relativo hardcoded)
+#
+# Limitações: caminho da fonte hardcoded relativo ('..font/'); se ausente, crash.
+#             Não é um nó ROS2 — não integrado no grafo de tópicos.
+#             Depende de pyzbar (apt: libzbar0) e Pillow (para texto Unicode).
+# Relevância para robodog2: base para nó ROS2 de vigilância que detete QR Codes
+#             em stream de câmara e publique conteúdo como std_msgs/String;
+#             substituir VideoCapture por subscrição de tópico da câmara Astra.
+
 import time
 import cv2 as cv
 import numpy as np

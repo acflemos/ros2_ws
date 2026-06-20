@@ -1,3 +1,22 @@
+#!/usr/bin/env python
+# encoding: utf-8
+# laser_to_image.py — Conversão de LaserScan em imagem bird's-eye view
+# =====================================================================
+# Nó ROS2 que recebe dados do LIDAR (LaserScan), converte para PointCloud2 via
+# LaserProjection local, e gera uma imagem top-down (1600×1200 px) onde cada
+# ponto laser é desenhado com intensidade proporcional à coordenada Z.
+# Escala: 80 px/m, origem no centro (500, 500). Publica a imagem resultante
+# e exibe uma versão redimensionada (640×480) localmente.
+#
+# Subscreve: /scan        (sensor_msgs/LaserScan)  — dados do LIDAR 2D
+# Publica:   /laserImage  (sensor_msgs/Image)       — imagem bird's-eye uint8
+#
+# Limitações: imagem muito grande (1600×1200) para uso em tempo real restrito;
+#             LaserProjection é uma cópia local (laser_geometry.py) não o pacote ROS2.
+#             Intensidade Z esperada entre -2 m e +2 m (LIDAR montado na horizontal).
+# Relevância para robodog2: útil para visualizar cobertura do LIDAR em testes;
+#             para navegação usar Nav2 costmap diretamente em vez desta imagem.
+
 import rclpy
 from rclpy.node import Node
 import cv2 as cv
