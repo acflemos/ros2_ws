@@ -4,6 +4,22 @@ Este README é a **memória compartilhada** do projeto: explica o propósito de 
 
 ---
 
+## ⚠️ Como clonar este repositório
+
+O nome do repositório no GitHub é `ros2_ws`, mas o seu **conteúdo é a pasta `src/` de um workspace ROS2** — o repo não inclui `build/`, `install/` nem `log/` (ver `.gitignore`). Um `git clone` simples cria uma pasta chamada `ros2_ws/`, o que **não** é a estrutura esperada por um workspace ROS2 (que precisa de `ros2_ws/src/`).
+
+Para clonar corretamente, informe o nome da pasta de destino como `src`:
+
+```bash
+mkdir -p ~/ros2_ws && cd ~/ros2_ws
+git clone https://github.com/acflemos/ros2_ws.git src
+git clone https://github.com/acflemos/robodog2.git src/robodog2
+```
+
+Isso evita ter que mover manualmente os pacotes depois do clone.
+
+---
+
 ## Visão geral
 
 Este workspace é o ambiente de estudo e desenvolvimento para o robô **ROSMASTER X3** da Yahboom, com foco em:
