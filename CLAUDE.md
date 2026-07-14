@@ -49,6 +49,10 @@ git clone https://github.com/acflemos/robodog2.git src/robodog2
 
 4. Novos pacotes autorais derivados de código Rosmaster/NVIDIA usam sempre o prefixo `robodog2_`.
 
+5. **Fluxo git deste repositório (`ros2_ws`)**:
+   - Documentação pura (README, este `CLAUDE.md`, comentários) → pode commitar direto em `main`
+   - Qualquer mudança de código real (pacotes novos, launch files, scripts) → sempre branch + PR, nunca direto em `main` — mesma regra do `robodog2`
+
 ---
 
 ## Ambiente físico do robô
